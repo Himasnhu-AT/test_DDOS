@@ -4904,6 +4904,8 @@ def killnon_critical():
                 print(f"Terminated {process_info['name']} (PID: {process_info['pid']})")
         except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
             pass
+def show_usage():
+    return "help"
 def main():
     if len(sys.argv) < 2 or sys.argv[1] == 'help':
         return show_usage()
