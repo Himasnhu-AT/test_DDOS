@@ -4905,7 +4905,7 @@ def killnon_critical():
         except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
             pass
 def show_usage():
-    return "help"
+    return
 def main():
     if len(sys.argv) < 2 or sys.argv[1] == 'help':
         return show_usage()
